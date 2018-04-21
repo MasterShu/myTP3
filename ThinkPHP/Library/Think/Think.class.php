@@ -131,6 +131,27 @@ class Think
 
         // 记录加载文件时间
         G('loadTime');
+        
+                // 添加 database 模型关系
+                $capsule = new \Illuminate\Database\Capsule\Manager;
+                $capsule->addConnection([
+                    'driver'    => C('DB_TYPE'),
+                    'host'      => C('DB_HOST'),
+                    'database'  => C('DB_NAME'),
+                    'username'  => C('DB_USER'),
+                    'password'  => C('DB_PWD'),
+                    'charset'   => C('DB_CHARSET'),
+                    'collation' => C('DB_COLLATION'),
+                    'prefix'    => C('DB_PREFIX'),
+                ]);
+                $capsule->setAsGlobal();
+                $capsule->bootEloquent();
+
+        // 设置Whoops提供的错误和异常处理
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
+        
         // 运行应用
         App::run();
     }
